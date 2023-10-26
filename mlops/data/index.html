@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>data - Made With ML</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "data";
+        var mkdocs_page_input_path = "mlops/data.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Made With ML
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">mlops</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">data</a>
+    <ul class="current">
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../models/">models</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../train/">train</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../tune/">tune</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../evaluate/">evaluate</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../predict/">predict</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../serve/">serve</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../utils/">utils</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Made With ML</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>mlops &raquo;</li>
+      <li>data</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/davbuf/driver_fatigue_detection/edit/master/docs/mlops/data.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <div class="doc doc-object doc-module">
+
+
+
+<a id="mlops.data"></a>
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h2 id="mlops.data.CustomPreprocessor" class="doc doc-heading">
+          <code>CustomPreprocessor</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="ray.data.preprocessor.Preprocessor">Preprocessor</span></code></p>
+
+  
+      <p>Custom preprocessor class.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>mlops/data.py</code></summary>
+              <pre class="highlight"><code class="language-python">class CustomPreprocessor(Preprocessor):
+    """Custom preprocessor class."""
+    def _fit(self, ds):
+        targets = ds.unique(column="targets")
+        self.class_to_index = {target: i for i, target in enumerate(targets)}
+        self.index_to_class = {v: k for k, v in self.class_to_index.items()}
+    def _transform_pandas(self, batch):  # could also do _transform_numpy
+        return preprocess(batch, class_to_index=self.class_to_index)</code></pre>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="mlops.data.group_split" class="doc doc-heading">
+          <code class="highlight language-python">group_split(ds, test_size, group_column='groups', seed=1234)</code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Split a dataset into train and test splits with equal
+amounts of data points from each class in the column we
+want to stratify on.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>ds</code></b>
+                  (<code><span title="ray.data.Dataset">Dataset</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Input dataset to split.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>test_size</code></b>
+                  (<code>float</code>)
+              –
+              <div class="doc-md-description">
+                <p>Proportion of dataset to split for test set.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>group_column</code></b>
+                  (<code>str</code>, default:
+                      <code>&#39;groups&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Name of column to group and split on.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>seed</code></b>
+                  (<code>int</code>, default:
+                      <code>1234</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>seed for shuffling. Defaults to 1234.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+                <code><span title="typing.Tuple">Tuple</span>[<span title="ray.data.Dataset">Dataset</span>, <span title="ray.data.Dataset">Dataset</span>]</code>
+            –
+            <div class="doc-md-description">
+              <p>Tuple[Dataset, Dataset]: the stratified train and test datasets.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary> <code>mlops/data.py</code></summary>
+            <pre class="highlight"><code class="language-python">def group_split(
+        ds: Dataset,
+        test_size: float,
+        group_column: str = 'groups',
+        seed: int = 1234,
+) -&gt; Tuple[Dataset, Dataset]:
+    """Split a dataset into train and test splits with equal
+    amounts of data points from each class in the column we
+    want to stratify on.
+
+    Args:
+        ds (Dataset): Input dataset to split.
+        test_size (float): Proportion of dataset to split for test set.
+        group_column (str, optional): Name of column to group and split on.
+        seed (int, optional): seed for shuffling. Defaults to 1234.
+
+    Returns:
+        Tuple[Dataset, Dataset]: the stratified train and test datasets.
+    """
+    train_split =  1 - test_size
+    gss = GroupShuffleSplit(n_splits=1, train_size=train_split, random_state=seed)
+    df_pandas = ds.to_pandas()
+    train_index, valid_index  = next(gss.split(np.vstack(df_pandas['features']), df_pandas['targets'], df_pandas[group_column]))
+    # Shuffle each split (required)
+    train_ds = df_pandas.iloc[train_index]
+    test_ds = df_pandas.iloc[valid_index]
+    return ray.data.from_pandas(train_ds), ray.data.from_pandas(test_ds)</code></pre>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="mlops.data.load_data" class="doc doc-heading">
+          <code class="highlight language-python">load_data(dataset_loc, subset='train', participant=0, num_samples=None)</code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Load data from source into a Ray Dataset.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>dataset_loc</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>Location of the dataset.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>num_samples</code></b>
+                  (<code>int</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The number of samples to load. Defaults to None.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+<b><code>Dataset</code></b>(                <code><span title="ray.data.Dataset">Dataset</span></code>
+)            –
+            <div class="doc-md-description">
+              <p>Our dataset represented by a Ray Dataset.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary> <code>mlops/data.py</code></summary>
+            <pre class="highlight"><code class="language-python">def load_data(dataset_loc: str, subset: str = 'train', participant: int = 0, num_samples: int = None) -&gt; Dataset:
+    """Load data from source into a Ray Dataset.
+
+    Args:
+        dataset_loc (str): Location of the dataset.
+        num_samples (int, optional): The number of samples to load. Defaults to None.
+
+    Returns:
+        Dataset: Our dataset represented by a Ray Dataset.
+    """
+    fpath = os.path.join(dataset_loc, subset+"_participant"+str(participant)+".pkl")
+    data, targets, groups = load_pickle(fpath)
+    ds = pd.DataFrame({'groups': groups, 'targets': targets})
+    ds['id'] = ds.index.values.tolist()
+    ds['features'] = ds['id'].apply(lambda r: data[r])
+    ds = ray.data.from_pandas(ds)
+    ds = ds.random_shuffle(seed=1234)
+    ds = ray.data.from_items(ds.take(num_samples)) if num_samples else ds
+    return ds</code></pre>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="mlops.data.preprocess" class="doc doc-heading">
+          <code class="highlight language-python">preprocess(df, class_to_index)</code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Preprocess the data in our dataframe.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw dataframe to preprocess.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>class_to_index</code></b>
+                  (<code><span title="typing.Dict">Dict</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Mapping of class names to indices.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+<b><code>Dict</code></b>(                <code><span title="typing.Dict">Dict</span></code>
+)            –
+            <div class="doc-md-description">
+              <p>preprocessed data (ids, masks, targets).</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary> <code>mlops/data.py</code></summary>
+            <pre class="highlight"><code class="language-python">def preprocess(df: pd.DataFrame, class_to_index: Dict) -&gt; Dict:
+    """Preprocess the data in our dataframe.
+
+    Args:
+        df (pd.DataFrame): Raw dataframe to preprocess.
+        class_to_index (Dict): Mapping of class names to indices.
+
+    Returns:
+        Dict: preprocessed data (ids, masks, targets).
+    """
+    df = df.drop(columns=["id"], errors="ignore")  # clean dataframe
+    df = df[["features", "targets", "groups"]]  # rearrange columns
+    df["targets"] = df["targets"].map(class_to_index)  # label encoding
+    outputs = rearranged(df)
+    return outputs</code></pre>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="mlops.data.rearranged" class="doc doc-heading">
+          <code class="highlight language-python">rearranged(batch)</code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Tokenize the text input in our batch using a tokenizer.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>batch</code></b>
+                  (<code><span title="typing.Dict">Dict</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>batch of data with the text inputs to tokenize.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+<b><code>Dict</code></b>(                <code><span title="typing.Dict">Dict</span></code>
+)            –
+            <div class="doc-md-description">
+              <p>batch of data with the results of tokenization (<code>input_ids</code> and <code>attention_mask</code>) on the text inputs.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary> <code>mlops/data.py</code></summary>
+            <pre class="highlight"><code class="language-python">def rearranged(batch: Dict) -&gt; Dict:
+    """Tokenize the text input in our batch using a tokenizer.
+
+    Args:
+        batch (Dict): batch of data with the text inputs to tokenize.
+
+    Returns:
+        Dict: batch of data with the results of tokenization (`input_ids` and `attention_mask`) on the text inputs.
+    """
+
+    xdnnt = np.reshape(np.vstack(batch["features"]), (-1, 4000, 4))
+    xdnnt = xdnnt[:, ::5]
+    xdnnt = xdnnt.transpose(0, 2, 1)
+    return dict(features=xdnnt, groups=np.array(batch['groups']), targets=np.array(batch["targets"]))</code></pre>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../models/" class="btn btn-neutral float-right" title="models">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/davbuf/driver_fatigue_detection" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+      <span><a href="../models/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme_extra.js" defer></script>
+    <script src="../../js/theme.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
